@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaos-aws-eks-deployment
+  namespace: workshop
+  labels:
+    app.kubernetes.io/created-by: eks-workshop
+    app.kubernetes.io/type: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: chaos-aws-eks
+      app.kubernetes.io/instance: chaos-aws-eks
+      app.kubernetes.io/component: service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: chaos-aws-eks
+        app.kubernetes.io/instance: chaos-aws-eks
+        app.kubernetes.io/component: service
+        app.kubernetes.io/created-by: eks-workshop
+    spec:
+      containers:
+      - name: chaos-aws-eks-container
+        image: roxsross12/workshop-roxs-eks-blueprints-demo:1c7a52ff
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "50m"
+            cpu: "128Mi"
+          limits:
+            memory: "200m"
+            cpu: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaos-aws-eks-service
+  namespace: workshop
+  labels:
+    app.kubernetes.io/name: chaos-aws-eks
+    app.kubernetes.io/instance: chaos-aws-eks
+    app.kubernetes.io/component: service
+    app.kubernetes.io/created-by: eks-workshop  
+spec:
+  selector:
+    app.kubernetes.io/name: chaos-aws-eks
+    app.kubernetes.io/instance: chaos-aws-eks
+    app.kubernetes.io/component: service
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
