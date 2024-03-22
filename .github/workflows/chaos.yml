@@ -1,99 +1,20 @@
-# Nombre del archivo: .github/workflows/main.yml
-
 name: Pipeline RoxsOnfire
 
 on:
-  push:
-    branches: 
-      - master
-  pull_request:
-    branches:
-      - master
-  workflow_dispatch:
-    inputs:
-      chaos:
-        description: 'Trigger chaos experiment'
-        required: false
-        default: 'false'
 
-env:
-  REGISTRY: ${{ secrets.DOCKER_USERNAME }}
-  REPOSITORY: ${{ github.event.repository.name }}
+    workflow_dispatch:
+        inputs:
+          chaos:
+            description: 'Trigger chaos experiment'
+            required: false
+            default: 'false'
 
 jobs:
-  Build:
-    name: 📌 Build and Push DockerHub"
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build and push
-        run: |
-          VERSION=`jq -r '.version' ./package.json`
-          docker build -t $REGISTRY/$REPOSITORY:$VERSION .
-          docker push $REGISTRY/$REPOSITORY:$VERSION
-  
-  Update-Compose:
-    name: 📑 Update Docker-Compose
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    needs: [Build]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Update Docker-Compose
-        run: |
-          VERSION=`jq -r '.version' ./package.json`
-          NAME=$(git rev-parse --abbrev-ref HEAD)
-          sed -i -- "s/VERSION/$VERSION/g" docker-compose.yaml
-      - uses: actions/upload-artifact@v4
-        with:
-          name: docker
-          path: docker-compose.yaml
-        
-  deploy:
-    name: 🛳 Deploy
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    needs: [Update-Compose]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: docker 
-      - name: copy file to Aws EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.KEY }}
-          source: "docker-compose.yaml"
-          target: "/home/ec2-user"    
-      - name: Deploy Docker-Compose
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            whoami
-            docker-compose up -d   
 
   chaos-aws-fis:
     name: 📑 Experiments AWS FIS
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.chaos == 'true' }}
-    needs: [deploy]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
