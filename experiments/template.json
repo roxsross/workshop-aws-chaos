@@ -24,7 +24,7 @@
             "source": "none"
         }
     ],
-    "roleArn": "arn:aws:iam::ACCOUNT:role/service-role/AWSFISIAMRole",
+    "roleArn": "arn:aws:iam::ACCOUNT:role/service-role/AWSFISIAMRole-1701302471575",
     "tags": {
         "Name": "RebootInstancia"
     },

@@ -112,3 +112,20 @@ jobs:
           TEMPLATE_ID=$( aws fis list-experiment-templates --query "experimentTemplates[?tags.Name=='${TEMPLATE_NAME}'].id" --output text )
           echo $TEMPLATE_ID
           experiment_output=$(aws fis start-experiment --experiment-template-id "$TEMPLATE_ID")
+          if [ $? -eq 0 ]; then
+              echo "Experimento iniciado con éxito."
+              # Extraer el ID del experimento iniciado
+              experiment_id=$(echo "$experiment_output" | jq -r '.experiment.id')
+              export $experiment_id 
+              echo "ID del experimento iniciado: $experiment_id"
+              job_status=""
+                while [[ $job_status != "completed" && $job_status != "failed" ]];
+                do
+                    sleep 20;
+                    job_status=$(aws fis get-experiment --id="$experiment_id" | jq -r .experiment.state.status);
+                done;
+                echo "$job_status"          
+          else
+              echo "Error al iniciar el experimento."
+          fi
+
