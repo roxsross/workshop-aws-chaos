@@ -8,6 +8,8 @@ on:
     branches:
       - master
 
+  workflow_dispatch:
+    
 env:
   REGISTRY: ${{ secrets.DOCKER_USERNAME }}
   REPOSITORY: ${{ github.event.repository.name }}
@@ -44,12 +46,12 @@ jobs:
       run: |
         VERSION=`jq -r '.version' ./package.json`
         NAME=$(git rev-parse --abbrev-ref HEAD)
-        sed -i -- "s/VERSION/$VERSION/g" docker-compose.yml
-        cat docker-compose.yml
+        sed -i -- "s/VERSION/$VERSION/g" docker-compose.yaml
+        cat docker-compose.yaml
     - uses: actions/upload-artifact@v3
       with:
         name: docker
-        path: docker-compose.yml
+        path: docker-compose.yaml
         
   deploy:
     name: 🛳 Deploy
