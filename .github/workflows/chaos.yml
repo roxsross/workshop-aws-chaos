@@ -112,3 +112,4 @@ jobs:
           echo $ACCOUNT_ID
           export TEMPLATE_NAME="RebootInstancia"
           EXISTS=$( aws fis list-experiment-templates --query "experimentTemplates[?tags.Name=='${TEMPLATE_NAME}'].id" --output text )
+          echo $EXISTS
