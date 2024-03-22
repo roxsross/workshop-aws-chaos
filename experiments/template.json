@@ -1,0 +1,41 @@
+{
+    "description": "RebootInstancia",
+    "targets": {
+        "Instances-Target-1": {
+            "resourceType": "aws:ec2:instance",
+            "resourceTags": {
+                "Name": "aws-fis-example"
+            },
+            "selectionMode": "ALL"
+        }
+    },
+    "actions": {
+        "ReinicioDeInstancia": {
+            "actionId": "aws:ec2:reboot-instances",
+            "description": "ReinicioInstancia",
+            "parameters": {},
+            "targets": {
+                "Instances": "Instances-Target-1"
+            }
+        }
+    },
+    "stopConditions": [
+        {
+            "source": "none"
+        }
+    ],
+    "roleArn": "arn:aws:iam::ACCOUNT:role/service-role/AWSFISIAMRole",
+    "tags": {
+        "Name": "RebootInstancia"
+    },
+    "logConfiguration": {
+        "cloudWatchLogsConfiguration": {
+            "logGroupArn": "arn:aws:logs:us-east-1:ACCOUNT:log-group:aws-fis-workshop/fis-logs:*"
+        },
+        "logSchemaVersion": 1
+    },
+    "experimentOptions": {
+        "accountTargeting": "single-account",
+        "emptyTargetResolutionMode": "fail"
+    }
+}

@@ -23,9 +23,9 @@ spec:
     spec:
       containers:
       - name: chaos-aws-eks-container
-        image: roxsross12/workshop-roxs-eks-blueprints-demo:1c7a52ff
+        image: roxsross12/workshop-aws-chaos:1.0.0
         ports:
-        - containerPort: 3000
+        - containerPort: 80
         resources:
           requests:
             memory: "50m"
@@ -51,5 +51,5 @@ spec:
     app.kubernetes.io/component: service
   ports:
     - protocol: TCP
-      port: 3000
-      targetPort: 3000
+      port: 80
+      targetPort: 80

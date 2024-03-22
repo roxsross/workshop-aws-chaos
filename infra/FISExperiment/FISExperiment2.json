@@ -1,0 +1,45 @@
+{
+    "description": "InterrupcionDeInstancia",
+    "targets": {
+        "Instances-Target-1": {
+            "resourceType": "aws:ec2:instance",
+            "resourceTags": {
+                "Name": "aws-fis-example"
+            },
+            "filters": [
+                {
+                    "path": "State.Name",
+                    "values": [
+                        "running"
+                    ]
+                }
+            ],
+            "selectionMode": "COUNT(1)"
+        }
+    },
+    "actions": {
+        "InterrupcaoDeInstanciaSpot": {
+            "actionId": "aws:ec2:terminate-instances",
+            "description": "Terminate Instance",
+            "parameters": {},
+            "targets": {
+                "Instances": "Instances-Target-1"
+            }
+        }
+    },
+    "stopConditions": [
+        {
+            "source": "none"
+        }
+    ],
+    "roleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/service-role/AWSFISIAMRole",
+    "logConfiguration": {
+        "cloudWatchLogsConfiguration": {
+            "logGroupArn": "arn:aws:logs:us-east-1:YOUR_ACCOUNT_ID:log-group:/fis-workshop/fis-logs:*"
+        },
+        "logSchemaVersion": 1
+    },
+    "tags": {
+        "Name": "InterrupcionDeInstancia"
+    }
+}
