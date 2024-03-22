@@ -98,7 +98,7 @@ jobs:
     - name: Sts GetCallerIdentity
       run: |
         aws sts get-caller-identity          
-    - name: Create template
+    - name: Ejecutar Experimento
       env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -108,8 +108,7 @@ jobs:
           aws sts get-caller-identity
           export REGION=$(aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]')
           export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
-          echo $REGION
-          echo $ACCOUNT_ID
           export TEMPLATE_NAME="RebootInstancia"
-          EXISTS=$( aws fis list-experiment-templates --query "experimentTemplates[?tags.Name=='${TEMPLATE_NAME}'].id" --output text )
-          echo $EXISTS
+          TEMPLATE_ID=$( aws fis list-experiment-templates --query "experimentTemplates[?tags.Name=='${TEMPLATE_NAME}'].id" --output text )
+          echo $TEMPLATE_ID
+          experiment_output=$(aws fis start-experiment --experiment-template-id "$TEMPLATE_ID")
