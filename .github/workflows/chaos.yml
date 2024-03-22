@@ -110,5 +110,5 @@ jobs:
           export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
           echo $REGION
           echo $ACCOUNT_ID
-          export TEMPLATE_NAME="Reboot-demo-instance"
+          export TEMPLATE_NAME="RebootInstancia"
           EXISTS=$( aws fis list-experiment-templates --query "experimentTemplates[?tags.Name=='${TEMPLATE_NAME}'].id" --output text )

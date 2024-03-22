@@ -24,13 +24,13 @@
             "source": "none"
         }
     ],
-    "roleArn": "arn:aws:iam::459137896070:role/service-role/AWSFISIAMRole",
+    "roleArn": "arn:aws:iam::ACCOUNT:role/service-role/AWSFISIAMRole",
     "tags": {
         "Name": "RebootInstancia"
     },
     "logConfiguration": {
         "cloudWatchLogsConfiguration": {
-            "logGroupArn": "arn:aws:logs:us-east-1:459137896070:log-group:aws-fis-workshop/fis-logs:*"
+            "logGroupArn": "arn:aws:logs:us-east-1:ACCOUNT:log-group:aws-fis-workshop/fis-logs:*"
         },
         "logSchemaVersion": 1
     },
