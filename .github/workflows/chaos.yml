@@ -1,11 +1,10 @@
-name: Pipeline RoxsOnfire
+name: Chaos
 
 on:
-
     workflow_dispatch:
         inputs:
           chaos:
-            description: 'Trigger chaos experiment'
+            description: 'Chaos experiment'
             required: false
             default: 'false'
 
